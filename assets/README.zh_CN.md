@@ -4,7 +4,7 @@
 
 # 资源目录（Assets）
 
-本目录集中存放可复用的资源（字库、图片、音乐等），按资源类型分子目录管理。每个资源放在其类型对应的子目录，并记录放置路径、命名方式、集成方式与来源/许可。二进制资源（字体、图片、音频）不属于纯 markdown 文档，请勿与文档混放。涉及版权/授权的资源需注明来源与许可。
+本目录集中存放可复用的资源（字库、图片、视频、音乐等），按资源类型分子目录管理。每个资源放在其类型对应的子目录，并记录放置路径、命名方式、集成方式与来源/许可。二进制资源（字体、图片、视频、音频）不属于纯 markdown 文档，请勿与文档混放。涉及版权/授权的资源需注明来源与许可。
 
 ## 字库（fonts）
 
@@ -14,6 +14,34 @@
 - 记录来源、许可、字符范围、转换命令与目标放置路径。
 - 添加字库前评估 Flash 与内部 RAM 影响；ESP32-C3 无 PSRAM。
 - 不提交许可不允许分发的字库。
+
+### 心跳应用
+
+| 文件 | 尺寸与格式 | 用途与来源 |
+| --- | --- | --- |
+| [`fonts/NotoSansSC-Regular.otf`](fonts/NotoSansSC-Regular.otf) | 8.3 MB，OpenType（CFF） | 心跳数字的源字库，Noto Sans SC Regular，采用 SIL Open Font License 1.1；许可证副本为 [`fonts/OFL.txt`](fonts/OFL.txt)。 |
+| `main/fonts/heart_font_80.c` | LVGL 9 生成 C 数组，4 bpp，不压缩 | 80 px 心率数字，仅包含 `0123456789-`；短横线用于 `--` 无数据状态。 |
+
+在仓库根目录用 `lv_font_conv` 1.5.3 与 FFmpeg 生成字库和视频帧：
+
+```text
+LV_FONT_CONV=/path/to/lv_font_conv.js NODE_EXE=/path/to/node \
+python3 tools/gen_heart_app_assets.py
+```
+
+脚本用转换器的 `dump` 输出验证全部 11 个字符，写出 `tests/heart_app_assets.json`，把猫咪视频转换为 `main/assets/heart_bg.bin`，并把开发者预览渲染到 `.tmp/heart_preview.png`。如果源文件或生成文件变化但未重新生成，`tests/test_heart_app_assets.py` 会失败。生成文件随仓库提交，因此固件构建不依赖 Node.js 或 FFmpeg。
+
+## 视频（video）
+
+可复用的视频源放在 `video/`。
+
+| 文件 | 尺寸与格式 | 用途与来源 |
+| --- | --- | --- |
+| [`video/heart_cat.mp4`](video/heart_cat.mp4) | 720 × 1280，8.04 秒，24 fps，仅 H.264 视频 | 项目所有者为本应用提供的猫咪爱心背景视频；未单独声明再分发许可。公开仓库版本已去除源音频轨和 AIGC 元数据。源画面边缘的 AI 生成水印不在显示所用中心裁切范围内。 |
+| `main/assets/heart_bg.bin` | 6,144,000 字节，40 帧 240 × 320 RGB565 小端，5 fps | 由 `tools/gen_heart_app_assets.py` 从源视频生成。画面中心裁切为 3:4，直接使用面板原生分辨率，运行时不做缩放。 |
+
+- 固件直接从 Flash 读取帧二进制，按整屏帧原样绘制，不需要变换，既避免 150 KB 的整帧缓冲，也避开 ESP32-C3 上过慢的软件缩放。
+- 更换视频、帧尺寸、帧率或帧数时，要重新运行生成脚本，并同步修改 `main/heart_ui.c` 中的常量。
 
 ## 图片（images）
 

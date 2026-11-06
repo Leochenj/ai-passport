@@ -1,0 +1,30 @@
+{
+  "schema": "heart-app-assets-v2",
+  "generated_by": "tools/gen_heart_app_assets.py",
+  "video": {
+    "source": "assets/video/heart_cat.mp4",
+    "source_sha256": "4b4d8717cf0dbc8571d6504591c80f2bbc613957d941d8f76024c3826652ea0d",
+    "output": "main/assets/heart_bg.bin",
+    "output_sha256": "57dfec91f8663e2e29f33fa6df66108dfb9dee0cec9e322648f3e95356dab6f9",
+    "bytes": 6144000,
+    "width": 240,
+    "height": 320,
+    "fps": 5,
+    "frames": 40,
+    "pixel_format": "rgb565le",
+    "scale_to_panel": 1
+  },
+  "font": {
+    "source": "assets/fonts/NotoSansSC-Regular.otf",
+    "source_sha256": "faa6c9df652116dde789d351359f3d7e5d2285a2b2a1f04a2d7244df706d5ea9",
+    "license": "SIL Open Font License 1.1",
+    "output": "main/fonts/heart_font_80.c",
+    "output_sha256": "5f384bfb445293caf7155cfb71c33a58a18b9bae77eaa27655f657a9c067c276",
+    "bytes": 72264,
+    "name": "heart_font_80",
+    "size": 80,
+    "bpp": 4,
+    "symbols": "0123456789-",
+    "converter": "lv_font_conv 1.5.3"
+  }
+}

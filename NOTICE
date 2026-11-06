@@ -1,0 +1,32 @@
+AI Passport Heartbeat
+Copyright (c) 2026 the AI Passport Heartbeat contributors
+
+This project is based on FoloToy AI Passport:
+  https://gitee.com/FoloToy/ai-passport
+  Copyright (c) 2026 FoloToy
+  Licensed under the MIT License. The upstream license text is retained in LICENSE.
+
+Modifications in this repository include the heartbeat application, the BPM and
+BLE compatibility handling, the video conversion pipeline, the generated frame
+and font assets, and the accompanying documentation. These modifications are
+provided under the MIT License unless a file states otherwise.
+
+Third-party assets:
+
+1. Noto Sans SC Regular
+   File: assets/fonts/NotoSansSC-Regular.otf
+   License: SIL Open Font License 1.1
+   License text: assets/fonts/OFL.txt
+   The generated LVGL font in main/fonts/heart_font_80.c is derived from this font.
+
+2. Cat-and-heart video
+   File: assets/video/heart_cat.mp4
+   Supplied by the repository owner for this application.
+   No separate redistribution license is asserted by this project. Replace this
+   file with an asset you have the rights to before redistributing the media.
+
+3. Generated video frames
+   File: main/assets/heart_bg.bin
+   Derived from assets/video/heart_cat.mp4 by tools/gen_heart_app_assets.py.
+
+The firmware is not a medical device. Heart rate values are for reference only.

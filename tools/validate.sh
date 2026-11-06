@@ -33,6 +33,10 @@ run_static_checks() {
         -o "${test_dir}/test_demo_navigation"
     "${test_dir}/test_demo_navigation"
     "${CC:-cc}" -std=c11 -Wall -Wextra -Werror -Imain \
+        tests/test_heart_model.c main/heart_model.c \
+        -o "${test_dir}/test_heart_model" -lm
+    "${test_dir}/test_heart_model"
+    "${CC:-cc}" -std=c11 -Wall -Wextra -Werror -Imain \
         tests/test_key_guard.c -o "${test_dir}/test_key_guard"
     "${test_dir}/test_key_guard"
     "${CC:-cc}" -std=c11 -Wall -Wextra -Werror -Icomponents/bsp/src \
@@ -58,12 +62,18 @@ run_static_checks() {
         -o "${test_dir}/test_bsp_audio_recovery"
     "${test_dir}/test_bsp_audio_recovery"
     for demo in audio low_power ble wifi; do
+        # Unwind tables keep test-only UI entry points alive on PE/COFF even
+        # with --gc-sections, so these header-runtime tests would fail to link
+        # on MinGW. The tests never throw; omit unwind data for the host link.
         "${CC:-cc}" -std=c11 -Wall -Wextra -Werror \
-            -ffunction-sections -fdata-sections -Itests/demo_stubs -Imain \
+            -ffunction-sections -fdata-sections \
+            -fno-unwind-tables -fno-asynchronous-unwind-tables \
+            -Itests/demo_stubs -Imain \
             "tests/test_demo_${demo}_runtime.c" -Wl,--gc-sections \
             -o "${test_dir}/test_demo_${demo}_runtime"
         "${test_dir}/test_demo_${demo}_runtime"
     done
+    PYTHONDONTWRITEBYTECODE=1 python3 tests/test_heart_app_assets.py
     PYTHONDONTWRITEBYTECODE=1 python3 tests/test_deep_sleep_contract.py
     PYTHONDONTWRITEBYTECODE=1 python3 tests/test_key_wake_contract.py
     PYTHONDONTWRITEBYTECODE=1 python3 tests/test_check_repo.py
