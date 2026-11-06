@@ -89,7 +89,10 @@ class VendoredDocumentationTest(unittest.TestCase):
             "components/vendor_audio2/README.md",
         ):
             with self.subTest(name=name):
-                errors = self.document_errors([self.document(name)])
+                errors = [
+                    error.replace("\\", "/")
+                    for error in self.document_errors([self.document(name)])
+                ]
                 self.assertEqual(len(errors), 2)
                 self.assertTrue(all(name in error for error in errors))
 
